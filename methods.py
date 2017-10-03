@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy
+from neural import Neural
 def draw_scatter(combo_1, combo_2, precipitation, water_level, max_temperature, min_temperature, solar_exposure,
                  precipitation_key, water_level_key, max_temperature_key, min_temperature_key, solar_exposure_key):
     precipitation_list = []
@@ -94,7 +95,7 @@ def calculate_cor(combo_1, combo_2, precipitation, water_level, max_temperature,
     values_1 = [float(n) for n in values_1]
     values_2 = [float(n) for n in values_2]
     cor = numpy.corrcoef(values_1, values_2)
-    return cor
+    return cor.item(0, 1)
 
 def month_con(month):
     if month == "Jan":
@@ -121,3 +122,45 @@ def month_con(month):
         return 11
     elif month == "Dec":
         return 12
+
+def making_training_set(precipitation, water_level, max_temperature, min_temperature, solar_exposure,
+                      precipitation_key, water_level_key, max_temperature_key, min_temperature_key, solar_exposure_key):
+    training_set = []
+    for i in range (0, len(precipitation_key)):
+        a_record = []
+        a_record.append(float(max_temperature[max_temperature_key[i]].temp))
+        a_record.append(float(min_temperature[min_temperature_key[i]].temp))
+        a_record.append(float(precipitation[precipitation_key[i]].amount))
+        a_record.append(float(solar_exposure[solar_exposure_key[i]].amount))
+        a_record.append(float(water_level[water_level_key[i]].amount))
+        training_set.append(a_record)
+    return training_set
+
+def training_sub(a_train_set, my_neural):
+    my_neural.set_i1(a_train_set[0])
+    my_neural.set_i2(a_train_set[1])
+    my_neural.set_i3(a_train_set[2])
+    my_neural.set_i4(a_train_set[3])
+    my_neural.set_target((a_train_set[4] + 1) * 1000000)
+    my_neural.learn_w1()
+    my_neural.learn_w2()
+    my_neural.learn_w3()
+    my_neural.learn_w4()
+    my_neural.learn_b()
+    return my_neural
+
+def training(training_set):
+    a_list = []
+    neural_1 = Neural()
+    for i in range(50000):
+        ri = numpy.random.randint(len(training_set))
+        a_train_set = training_set[ri]
+        training_sub(a_train_set, neural_1)
+        #print(((neural_1.output / 100000)-1) - a_train_set[4])
+        a_list.append(abs((neural_1.output / 1000000) - 1 - a_train_set[4]))
+    sum = 0
+    for j in a_list:
+        sum = sum + j
+    avg = sum / len(a_list)
+    print(avg)
+    return [neural_1.get_w1(), neural_1.get_w2(), neural_1.get_w3(), neural_1.get_w4(), neural_1.get_b()]

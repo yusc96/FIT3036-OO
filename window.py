@@ -7,6 +7,7 @@ from solar import Solar
 from water_level import Water_level
 import csv
 import methods
+import numpy
 
 class MainWindow:
     def __init__(self):
@@ -21,6 +22,12 @@ class MainWindow:
         self.min_temperature_key = []
         self.solar_exposure = {}
         self.solar_exposure_key = []
+        # create weight for ANN
+        self.w1 = numpy.random.randn()
+        self.w2 = numpy.random.randn()
+        self.w3 = numpy.random.randn()
+        self.w4 = numpy.random.randn()
+        self.b = numpy.random.randn()
         # create a the widgets
         # create a windows object
         self.root = Tk()
@@ -80,7 +87,43 @@ class MainWindow:
             self.min_temperature_key, self.solar_exposure_key))
         self.corr_button.place(x=410, y=120, anchor="center")
         self.text_output = Text(self.root, height=15, width=42)
-        self.text_output.place(x=700, y=160, anchor="center")
+        self.text_output.place(x=700, y=180, anchor="center")
+        # Making prediction function interface
+        #add a Max Temperature lable
+        self.lmaxtemp = Label(self.root, text="Max Temperature")
+        self.lmaxtemp.place(x=100, y=220, anchor="center")
+        #add a text entry for Max Temperature
+        self.emaxtemp = Entry(self.root)
+        self.emaxtemp.place(x=100, y=240, anchor="center")
+        #add a Min Temperature lable
+        self.lmintemp = Label(self.root, text="Min Temperature")
+        self.lmintemp.place(x=250, y=220, anchor="center")
+        #add a text entry for Min Temperature
+        self.emintemp = Entry(self.root)
+        self.emintemp.place(x=250, y=240, anchor="center")
+        #add a Rainfall lable
+        self.lrainfall = Label(self.root, text="Rainfall")
+        self.lrainfall.place(x=100, y=280, anchor="center")
+        #add a text entry for Rainfall
+        self.erainfall = Entry(self.root)
+        self.erainfall.place(x=100, y=300, anchor="center")
+        #add a Solar lable
+        self.lsolar = Label(self.root, text="Solar")
+        self.lsolar.place(x=250, y=280, anchor="center")
+        #add a text entry for Solar
+        self.esolar = Entry(self.root)
+        self.esolar.place(x=250, y=300, anchor="center")
+        # create button for Training ANN
+        self.train_button = Button(self.root, text="Training ANN", command=lambda: self.training_ann(
+            self.precipitation, self.water_level, self.max_temperature,
+            self.min_temperature,
+            self.solar_exposure, self.precipitation_key, self.water_level_key, self.max_temperature_key,
+            self.min_temperature_key, self.solar_exposure_key))
+        self.train_button.place(x=400, y=240, anchor="center")
+        # create button for Prediction
+        self.Predict_button = Button(self.root, text="Predict", command=lambda: self.predict(
+            self.emaxtemp.get(), self.emintemp.get(), self.erainfall.get(), self.esolar.get()))
+        self.Predict_button.place(x=400, y=300, anchor="center")
     def read_csv(self, file_type):
         if file_type == "precipitation":
             print("read precipitation")
@@ -198,7 +241,25 @@ class MainWindow:
         corr = methods.calculate_cor(combo_1, combo_2, precipitation, water_level, max_temperature, min_temperature, solar_exposure,
                       precipitation_key, water_level_key, max_temperature_key, min_temperature_key, solar_exposure_key)
         corr = str(corr)
-        self.text_output.insert("insert", corr)
+        self.text_output.insert("insert", "The correlation is: "+str(corr)+ "\n")
+
+    def training_ann(self, precipitation, water_level, max_temperature, min_temperature, solar_exposure,
+                      precipitation_key, water_level_key, max_temperature_key, min_temperature_key, solar_exposure_key):
+        train_set = methods.making_training_set(precipitation, water_level, max_temperature, min_temperature, solar_exposure,
+                      precipitation_key, water_level_key, max_temperature_key, min_temperature_key, solar_exposure_key)
+        training_result = methods.training(train_set)
+        self.w1 = training_result[0]
+        self.w2 = training_result[1]
+        self.w3 = training_result[2]
+        self.w4 = training_result[3]
+        self.b = training_result[4]
+
+
+    def predict(self, max_temp, min_temp, rainfall, solar):
+        result = ((float(max_temp) * self.w1 + float(min_temp) *
+                  self.w2 + float(rainfall) * self.w3 * float(solar) * self.w4 + self.b)/1000000)-1
+        self.text_output.insert("insert", "The predict result: "+str(result) + "\n")
+        return result
 
 if __name__ == "__main__":
     window = MainWindow()

@@ -1,16 +1,17 @@
 import numpy
 class Neural:
-    def __init__(self, i1, i2, i3, i4, i5):
+    def __init__(self):
         self.w1 = numpy.random.randn()
         self.w2 = numpy.random.randn()
         self.w3 = numpy.random.randn()
         self.w4 = numpy.random.randn()
         self.b = numpy.random.randn()
-        self.i1 = i1
-        self.i2 = i2
-        self.i3 = i3
-        self.i4 = i4
-        self.i5 = i5
+        self.i1 = None
+        self.i2 = None
+        self.i3 = None
+        self.i4 = None
+        self.i5 = None
+        self.output = None
         self.learning_rate = 0.00001
 
     def get_w1(self):
@@ -40,16 +41,29 @@ class Neural:
     def get_target(self):
         return self.i5
 
+    def get_b(self):
+        return self.b
+
     def set_target(self, new_target):
         self.i5 = new_target
 
-    def get_b(self):
-        return self.b
+    def set_i1(self, i1):
+        self.i1 = i1
+
+    def set_i2(self, i2):
+        self.i2 = i2
+
+    def set_i3(self, i3):
+        self.i3 = i3
+
+    def set_i4(self, i4):
+        self.i4 = i4
 
     def cal_new_i(self):
         new_i = self.w1 * self.i1 + self.w2 * self.i2 +\
                 self.w3 * self.i3 + self.w4 * self.i4 +\
                 self.b
+        self.output = new_i
         return new_i
 
     def cal_cost(self):

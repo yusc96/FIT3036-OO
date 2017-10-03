@@ -12,11 +12,11 @@ my_trainset = [[24.2, 19.8, 0, 22, 0.095],
 
 
 def training_ann(training_set, my_neural):
-    my_neural.set_w1(training_set[0])
-    my_neural.set_w2(training_set[1])
-    my_neural.set_w3(training_set[2])
-    my_neural.set_w4(training_set[3])
-    my_neural.set_target(training_set[4])
+    my_neural.set_i1(training_set[0])
+    my_neural.set_i2(training_set[1])
+    my_neural.set_i3(training_set[2])
+    my_neural.set_i4(training_set[3])
+    my_neural.set_target((training_set[4]+1)*100000)
     my_neural.learn_w1()
     my_neural.learn_w2()
     my_neural.learn_w3()
@@ -25,11 +25,17 @@ def training_ann(training_set, my_neural):
     return my_neural
 
 
-
-neural_1 = Neural(24.2, 19.8, 0, 22, 0.095)
+a_list = []
+neural_1 = Neural()
 for i in range(50000):
     ri = numpy.random.randint(len(my_trainset))
     train_set = my_trainset[ri]
     training_ann(train_set, neural_1)
-    print(neural_1.cal_new_i())
+    print(neural_1.output/100000)
+    a_list.append(abs(neural_1.output/100000 - (train_set[4] + 1)))
+sum = 0
+for j in a_list:
+    sum = sum + j
+avg = sum/len(a_list)
+print(avg)
 
