@@ -136,6 +136,15 @@ def making_training_set(precipitation, water_level, max_temperature, min_tempera
         training_set.append(a_record)
     return training_set
 
+
+def delete_data_rain_0(training_set):
+    new_set = training_set
+    for i in range(len(new_set)):
+        if new_set[i][2] == 0:
+            del i
+    return new_set
+
+
 def training_sub(a_train_set, my_neural):
     my_neural.set_i1(a_train_set[0])
     my_neural.set_i2(a_train_set[1])
@@ -149,10 +158,10 @@ def training_sub(a_train_set, my_neural):
     my_neural.learn_b()
     return my_neural
 
-def training(training_set):
+def training(training_set, training_time):
     a_list = []
     neural_1 = Neural()
-    for i in range(50000):
+    for i in range(training_time):
         ri = numpy.random.randint(len(training_set))
         a_train_set = training_set[ri]
         training_sub(a_train_set, neural_1)
@@ -162,5 +171,5 @@ def training(training_set):
     for j in a_list:
         sum = sum + j
     avg = sum / len(a_list)
-    print(avg)
+    print('avg_error = ' + str(avg))
     return [neural_1.get_w1(), neural_1.get_w2(), neural_1.get_w3(), neural_1.get_w4(), neural_1.get_b()]

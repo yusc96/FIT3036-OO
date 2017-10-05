@@ -118,12 +118,18 @@ class MainWindow:
             self.precipitation, self.water_level, self.max_temperature,
             self.min_temperature,
             self.solar_exposure, self.precipitation_key, self.water_level_key, self.max_temperature_key,
-            self.min_temperature_key, self.solar_exposure_key))
+            self.min_temperature_key, self.solar_exposure_key, self.etrain.get()))
         self.train_button.place(x=400, y=240, anchor="center")
         # create button for Prediction
         self.Predict_button = Button(self.root, text="Predict", command=lambda: self.predict(
             self.emaxtemp.get(), self.emintemp.get(), self.erainfall.get(), self.esolar.get()))
         self.Predict_button.place(x=400, y=300, anchor="center")
+        ##add a Training Times lable
+        self.ltrain = Label(self.root, text="Training Times")
+        self.ltrain.place(x=250, y=150, anchor="center")
+        #add a text entry for Training Times
+        self.etrain = Entry(self.root)
+        self.etrain.place(x=250, y=180, anchor="center")
     def read_csv(self, file_type):
         if file_type == "precipitation":
             print("read precipitation")
@@ -244,22 +250,29 @@ class MainWindow:
         self.text_output.insert("insert", "The correlation is: "+str(corr)+ "\n")
 
     def training_ann(self, precipitation, water_level, max_temperature, min_temperature, solar_exposure,
-                      precipitation_key, water_level_key, max_temperature_key, min_temperature_key, solar_exposure_key):
+                      precipitation_key, water_level_key, max_temperature_key, min_temperature_key, solar_exposure_key, training_time):
         train_set = methods.making_training_set(precipitation, water_level, max_temperature, min_temperature, solar_exposure,
                       precipitation_key, water_level_key, max_temperature_key, min_temperature_key, solar_exposure_key)
-        training_result = methods.training(train_set)
+        new_train_set = methods.delete_data_rain_0(train_set)
+        training_result = methods.training(new_train_set, int(training_time))
         self.w1 = training_result[0]
+        print('w1 = ' + str(self.w1))
         self.w2 = training_result[1]
+        print('w2 = ' + str(self.w2))
         self.w3 = training_result[2]
+        print('w3 = ' + str(self.w3))
         self.w4 = training_result[3]
+        print('w4 = ' + str(self.w4))
         self.b = training_result[4]
+        print('b = ' + str(self.b))
 
 
     def predict(self, max_temp, min_temp, rainfall, solar):
         result = ((float(max_temp) * self.w1 + float(min_temp) *
-                  self.w2 + float(rainfall) * self.w3 * float(solar) * self.w4 + self.b)/1000000)-1
+                  self.w2 + float(rainfall) * self.w3 + float(solar) * self.w4 + self.b)/1000000)-1
         self.text_output.insert("insert", "The predict result: "+str(result) + "\n")
         return result
+
 
 if __name__ == "__main__":
     window = MainWindow()
