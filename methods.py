@@ -1,7 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy
 from neural import Neural
-def draw_scatter(combo_1, combo_2, precipitation, water_level, max_temperature, min_temperature, solar_exposure,
+
+def get_data(combo_1, combo_2, precipitation, water_level, max_temperature, min_temperature, solar_exposure,
                  precipitation_key, water_level_key, max_temperature_key, min_temperature_key, solar_exposure_key):
     precipitation_list = []
     water_level_list = []
@@ -42,6 +43,9 @@ def draw_scatter(combo_1, combo_2, precipitation, water_level, max_temperature, 
         values_2 = min_temperature_list
     elif combo_value_2 == "Solar Exposure":
         values_2 = solar_exposure_list
+    return [values_1, values_2, combo_value_1, combo_value_2]
+
+def draw_scatter(values_1, values_2, combo_value_1, combo_value_2):
     lable_value = combo_value_1 + ' VS ' + combo_value_2
     plt.scatter(values_1, values_2, label=lable_value, marker="*")
     plt.xlabel(combo_value_1)
@@ -51,51 +55,32 @@ def draw_scatter(combo_1, combo_2, precipitation, water_level, max_temperature, 
     plt.show()
 
 
-def calculate_cor(combo_1, combo_2, precipitation, water_level, max_temperature, min_temperature, solar_exposure,
+def draw_scatter_connect(combo_1, combo_2, precipitation, water_level, max_temperature, min_temperature, solar_exposure,
                  precipitation_key, water_level_key, max_temperature_key, min_temperature_key, solar_exposure_key):
-    precipitation_list = []
-    water_level_list = []
-    max_temperature_list = []
-    min_temperature_list = []
-    solar_exposure_list = []
-    for i in precipitation_key:
-        precipitation_list.append(precipitation[i].amount)
-    for i in water_level_key:
-        water_level_list.append(water_level[i].amount)
-    for i in max_temperature_key:
-        max_temperature_list.append(max_temperature[i].temp)
-    for i in min_temperature_key:
-        min_temperature_list.append(min_temperature[i].temp)
-    for i in solar_exposure_key:
-        solar_exposure_list.append(solar_exposure[i].amount)
-    combo_value_1 = combo_1.get()
-    combo_value_2 = combo_2.get()
-    values_1 = None
-    values_2 = None
-    if combo_value_1 == "Water Level":
-        values_1 = water_level_list
-    elif combo_value_1 == "Precipitation":
-        values_1 = precipitation_list
-    elif combo_value_1 == "Max Temperature":
-        values_1 = max_temperature_list
-    elif combo_value_1 == "Min Temperature":
-        values_1 = min_temperature_list
-    elif combo_value_1 == "Solar Exposure":
-        values_1 = solar_exposure_list
-    if combo_value_2 == "Water Level":
-        values_2 = water_level_list
-    elif combo_value_2 == "Precipitation":
-        values_2 = precipitation_list
-    elif combo_value_2 == "Max Temperature":
-        values_2 = max_temperature_list
-    elif combo_value_2 == "Min Temperature":
-        values_2 = min_temperature_list
-    elif combo_value_2 == "Solar Exposure":
-        values_2 = solar_exposure_list
+    data = get_data(combo_1, combo_2, precipitation, water_level, max_temperature, min_temperature, solar_exposure,
+                 precipitation_key, water_level_key, max_temperature_key, min_temperature_key, solar_exposure_key)
+    values_1 = data[0]
+    values_2 = data[1]
+    combo_value_1 = data[2]
+    combo_value_2 = data[3]
+    draw_scatter(values_1, values_2, combo_value_1, combo_value_2)
+
+
+def calculate_cor(values_1, values_2):
     values_1 = [float(n) for n in values_1]
     values_2 = [float(n) for n in values_2]
     cor = numpy.corrcoef(values_1, values_2)
     return cor.item(0, 1)
+
+
+def calculate_cor_connect(combo_1, combo_2, precipitation, water_level, max_temperature, min_temperature, solar_exposure,
+                 precipitation_key, water_level_key, max_temperature_key, min_temperature_key, solar_exposure_key):
+    data = get_data(combo_1, combo_2, precipitation, water_level, max_temperature, min_temperature, solar_exposure,
+                 precipitation_key, water_level_key, max_temperature_key, min_temperature_key, solar_exposure_key)
+    values_1 = data[0]
+    values_2 = data[1]
+    return calculate_cor(values_1, values_2)
+
 
 def month_con(month):
     if month == "Jan":
@@ -122,6 +107,7 @@ def month_con(month):
         return 11
     elif month == "Dec":
         return 12
+
 
 def making_training_set(precipitation, water_level, max_temperature, min_temperature, solar_exposure,
                       precipitation_key, water_level_key, max_temperature_key, min_temperature_key, solar_exposure_key):
@@ -158,6 +144,7 @@ def training_sub(a_train_set, my_neural):
     my_neural.learn_b()
     return my_neural
 
+
 def training(training_set, training_time):
     a_list = []
     neural_1 = Neural()
@@ -165,7 +152,6 @@ def training(training_set, training_time):
         ri = numpy.random.randint(len(training_set))
         a_train_set = training_set[ri]
         training_sub(a_train_set, neural_1)
-        #print(((neural_1.output / 100000)-1) - a_train_set[4])
         a_list.append(abs((neural_1.output / 1000000) - 1 - a_train_set[4]))
     sum = 0
     for j in a_list:

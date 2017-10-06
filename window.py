@@ -64,7 +64,7 @@ class MainWindow:
         self.combo_2.current(0)
         self.combo_2.place(x=280, y=60, anchor="center")
         # create button for draw scatter plot
-        self.scatter_button = Button(self.root, text="Scatter Plot", command= lambda: methods.draw_scatter(
+        self.scatter_button = Button(self.root, text="Scatter Plot", command= lambda: methods.draw_scatter_connect(
             self.combo_1, self.combo_2, self.precipitation, self.water_level, self.max_temperature, self.min_temperature,
             self.solar_exposure, self.precipitation_key, self.water_level_key, self.max_temperature_key,
             self.min_temperature_key, self.solar_exposure_key))
@@ -244,7 +244,7 @@ class MainWindow:
 
     def get_corr(self, combo_1, combo_2, precipitation, water_level, max_temperature, min_temperature, solar_exposure,
                       precipitation_key, water_level_key, max_temperature_key, min_temperature_key, solar_exposure_key):
-        corr = methods.calculate_cor(combo_1, combo_2, precipitation, water_level, max_temperature, min_temperature, solar_exposure,
+        corr = methods.calculate_cor_connect(combo_1, combo_2, precipitation, water_level, max_temperature, min_temperature, solar_exposure,
                       precipitation_key, water_level_key, max_temperature_key, min_temperature_key, solar_exposure_key)
         corr = str(corr)
         self.text_output.insert("insert", "The correlation is: "+str(corr)+ "\n")
