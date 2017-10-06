@@ -8,6 +8,7 @@ from water_level import Water_level
 import csv
 import methods
 import numpy
+import matplotlib.pyplot as plt
 
 class MainWindow:
     def __init__(self):
@@ -253,19 +254,18 @@ class MainWindow:
                       precipitation_key, water_level_key, max_temperature_key, min_temperature_key, solar_exposure_key, training_time):
         train_set = methods.making_training_set(precipitation, water_level, max_temperature, min_temperature, solar_exposure,
                       precipitation_key, water_level_key, max_temperature_key, min_temperature_key, solar_exposure_key)
-        new_train_set = methods.delete_data_rain_0(train_set)
-        training_result = methods.training(new_train_set, int(training_time))
+        training_result = methods.training(train_set, int(training_time))
         self.w1 = training_result[0]
-        print('w1 = ' + str(self.w1))
+        self.text_output.insert("insert", 'w1 = ' + str(self.w1) + "\n")
         self.w2 = training_result[1]
-        print('w2 = ' + str(self.w2))
+        self.text_output.insert("insert", 'w2 = ' + str(self.w2) + "\n")
         self.w3 = training_result[2]
-        print('w3 = ' + str(self.w3))
+        self.text_output.insert("insert", 'w3 = ' + str(self.w3) + "\n")
         self.w4 = training_result[3]
-        print('w4 = ' + str(self.w4))
+        self.text_output.insert("insert", 'w4 = ' + str(self.w4) + "\n")
         self.b = training_result[4]
-        print('b = ' + str(self.b))
-
+        self.text_output.insert("insert", 'b = ' + str(self.b) + "\n")
+        methods.draw_scatter_test(training_result[5])
 
     def predict(self, max_temp, min_temp, rainfall, solar):
         result = ((float(max_temp) * self.w1 + float(min_temp) *

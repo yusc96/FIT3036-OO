@@ -38,6 +38,9 @@ class Neural:
     def set_w4(self, new_w4):
         self.w4 = new_w4
 
+    def set_b(self, new_b):
+        self.b = new_b
+
     def get_target(self):
         return self.i5
 
