@@ -90,25 +90,25 @@ class MainWindow:
         self.text_output.place(x=700, y=180, anchor="center")
         # Making prediction function interface
         #add a Max Temperature lable
-        self.lmaxtemp = Label(self.root, text="Max Temperature")
+        self.lmaxtemp = Label(self.root, text="Max Temperature (Celsius)")
         self.lmaxtemp.place(x=100, y=220, anchor="center")
         #add a text entry for Max Temperature
         self.emaxtemp = Entry(self.root)
         self.emaxtemp.place(x=100, y=240, anchor="center")
         #add a Min Temperature lable
-        self.lmintemp = Label(self.root, text="Min Temperature")
+        self.lmintemp = Label(self.root, text="Min Temperature (Celsius)")
         self.lmintemp.place(x=250, y=220, anchor="center")
         #add a text entry for Min Temperature
         self.emintemp = Entry(self.root)
         self.emintemp.place(x=250, y=240, anchor="center")
         #add a Rainfall lable
-        self.lrainfall = Label(self.root, text="Rainfall")
+        self.lrainfall = Label(self.root, text="Rainfall (Millimeter)")
         self.lrainfall.place(x=100, y=280, anchor="center")
         #add a text entry for Rainfall
         self.erainfall = Entry(self.root)
         self.erainfall.place(x=100, y=300, anchor="center")
         #add a Solar lable
-        self.lsolar = Label(self.root, text="Solar")
+        self.lsolar = Label(self.root, text="Solar (MJ/m*m)")
         self.lsolar.place(x=250, y=280, anchor="center")
         #add a text entry for Solar
         self.esolar = Entry(self.root)
