@@ -8,7 +8,7 @@ from water_level import Water_level
 import csv
 import methods
 import numpy
-import matplotlib.pyplot as plt
+import time
 
 class MainWindow:
     def __init__(self):
@@ -254,7 +254,10 @@ class MainWindow:
                       precipitation_key, water_level_key, max_temperature_key, min_temperature_key, solar_exposure_key, training_time):
         train_set = methods.making_training_set(precipitation, water_level, max_temperature, min_temperature, solar_exposure,
                       precipitation_key, water_level_key, max_temperature_key, min_temperature_key, solar_exposure_key)
+        start = time.time()
         training_result = methods.training(train_set, int(training_time))
+        end = time.time()
+        total_time = end - start
         self.w1 = training_result[0]
         self.text_output.insert("insert", 'w1 = ' + str(self.w1) + "\n")
         self.w2 = training_result[1]
@@ -265,6 +268,7 @@ class MainWindow:
         self.text_output.insert("insert", 'w4 = ' + str(self.w4) + "\n")
         self.b = training_result[4]
         self.text_output.insert("insert", 'b = ' + str(self.b) + "\n")
+        self.text_output.insert("insert", 'runing time: ' + str(total_time) + "\n")
         methods.draw_scatter_test(training_result[5])
 
     def predict(self, max_temp, min_temp, rainfall, solar):

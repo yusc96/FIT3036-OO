@@ -5,6 +5,7 @@ from temperature import Temperature
 from water_level import Water_level
 from solar import Solar
 from neural import Neural
+from window import MainWindow
 class Testmethods(unittest.TestCase):
 
     def test_month_con(self):
@@ -243,6 +244,62 @@ class Testmethods(unittest.TestCase):
         test_neural.set_target(100)
         result = 10.00072
         self.assertEqual(test_neural.learn_b(), result)
+
+    def test_predict_1(self):
+        test_window = MainWindow()
+        test_window.w1 = 2
+        test_window.w2 = 2.5
+        test_window.w3 = 1.45
+        test_window.w4 = 3.62
+        test_window.b = 5.6
+        max_temp = 30
+        min_temp = 25.5
+        rainfall = 3.4
+        solar = 20
+        result = -0.99979332
+        self.assertEqual(test_window.predict(max_temp, min_temp, rainfall, solar), result)
+
+    def test_predict_2(self):
+        test_window = MainWindow()
+        test_window.w1 = 2
+        test_window.w2 = -2.5
+        test_window.w3 = 1.45
+        test_window.w4 = -3.62
+        test_window.b = 5.6
+        max_temp = 30
+        min_temp = 25.5
+        rainfall = 3.4
+        solar = 20
+        result = -1.00006562
+        self.assertEqual(test_window.predict(max_temp, min_temp, rainfall, solar), result)
+
+    def test_predict_3(self):
+        test_window = MainWindow()
+        test_window.w1 = 2
+        test_window.w2 = 2.5
+        test_window.w3 = 1.45
+        test_window.w4 = 3.62
+        test_window.b = 5.6
+        max_temp = 30
+        min_temp = 25.5
+        rainfall = -3.4
+        solar = 20
+        result = ValueError
+        self.assertEqual(test_window.predict(max_temp, min_temp, rainfall, solar), result)
+
+    def test_predict_4(self):
+        test_window = MainWindow()
+        test_window.w1 = 2
+        test_window.w2 = 2.5
+        test_window.w3 = 1.45
+        test_window.w4 = 3.62
+        test_window.b = 5.6
+        max_temp = 'Thirty'
+        min_temp = 'twenty five point five'
+        rainfall = 'Three Point four'
+        solar = 'twenty'
+        result = TypeError
+        self.assertEqual(test_window.predict(max_temp, min_temp, rainfall, solar), result)
 
 if __name__ == "__main__":
     unittest.main()

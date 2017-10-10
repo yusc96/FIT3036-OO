@@ -161,10 +161,10 @@ def training(training_set, training_time):
     return [neural_1.get_w1(), neural_1.get_w2(), neural_1.get_w3(), neural_1.get_w4(), neural_1.get_b(), a_list]
 
 def draw_scatter_test(y):
-    part_y = []
-    for i in range(0, len(y), 1000):
-        part_y.append(y[i])
-    plt.hist(part_y)
+    #part_y = []
+    #for i in range(0, len(y), 1000):
+        #part_y.append(y[i])
+    plt.hist(y)
     plt.xlabel("Error")
     plt.ylabel("Frequency")
     plt.title("Prediction Error Histogram")
