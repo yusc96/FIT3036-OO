@@ -109,9 +109,9 @@ def month_con(month):
         return 12
 
 
-def making_training_set(precipitation, water_level, max_temperature, min_temperature, solar_exposure,
+def making_training_testing_set(precipitation, water_level, max_temperature, min_temperature, solar_exposure,
                       precipitation_key, water_level_key, max_temperature_key, min_temperature_key, solar_exposure_key):
-    training_set = []
+    data_set = []
     for i in range (0, len(precipitation_key)):
         a_record = []
         a_record.append(float(max_temperature[max_temperature_key[i]].temp))
@@ -119,8 +119,11 @@ def making_training_set(precipitation, water_level, max_temperature, min_tempera
         a_record.append(float(precipitation[precipitation_key[i]].amount))
         a_record.append(float(solar_exposure[solar_exposure_key[i]].amount))
         a_record.append(float(water_level[water_level_key[i]].amount))
-        training_set.append(a_record)
-    return training_set
+        data_set.append(a_record)
+    numpy.random.shuffle(data_set)
+    training_set = data_set[:int(round(0.7*len(data_set), 0))]
+    testing_set = data_set[int(round(0.7*len(data_set), 0)):]
+    return [training_set, testing_set]
 
 
 def delete_data_rain_0(training_set):

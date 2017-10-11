@@ -252,8 +252,9 @@ class MainWindow:
 
     def training_ann(self, precipitation, water_level, max_temperature, min_temperature, solar_exposure,
                       precipitation_key, water_level_key, max_temperature_key, min_temperature_key, solar_exposure_key, training_time):
-        train_set = methods.making_training_set(precipitation, water_level, max_temperature, min_temperature, solar_exposure,
+        dataset = methods.making_training_testing_set(precipitation, water_level, max_temperature, min_temperature, solar_exposure,
                       precipitation_key, water_level_key, max_temperature_key, min_temperature_key, solar_exposure_key)
+        train_set = dataset[0]
         start = time.time()
         training_result = methods.training(train_set, int(training_time))
         end = time.time()
@@ -268,7 +269,7 @@ class MainWindow:
         self.text_output.insert("insert", 'w4 = ' + str(self.w4) + "\n")
         self.b = training_result[4]
         self.text_output.insert("insert", 'b = ' + str(self.b) + "\n")
-        self.text_output.insert("insert", 'runing time: ' + str(total_time) + "\n")
+        self.text_output.insert("insert", 'running time: ' + str(total_time) + "\n")
         methods.draw_scatter_test(training_result[5])
 
     def predict(self, max_temp, min_temp, rainfall, solar):
