@@ -29,6 +29,8 @@ class MainWindow:
         self.w3 = numpy.random.randn()
         self.w4 = numpy.random.randn()
         self.b = numpy.random.randn()
+        self.neural = None
+        self.testing_set = None
         # create a the widgets
         # create a windows object
         self.root = Tk()
@@ -131,6 +133,10 @@ class MainWindow:
         #add a text entry for Training Times
         self.etrain = Entry(self.root)
         self.etrain.place(x=250, y=180, anchor="center")
+        #add a button for test
+        self.test_button = Button(self.root, text="Testing ANN", command=lambda: self.testing(self.testing_set,
+                                                                                              self.neural))
+        self.test_button.place(x=400, y=350, anchor="center")
     def read_csv(self, file_type):
         if file_type == "precipitation":
             print("read precipitation")
@@ -255,28 +261,36 @@ class MainWindow:
         dataset = methods.making_training_testing_set(precipitation, water_level, max_temperature, min_temperature, solar_exposure,
                       precipitation_key, water_level_key, max_temperature_key, min_temperature_key, solar_exposure_key)
         train_set = dataset[0]
+        self.testing_set = dataset[1]
         start = time.time()
         training_result = methods.training(train_set, int(training_time))
         end = time.time()
         total_time = end - start
-        self.w1 = training_result[0]
+        self.w1 = training_result[0].get_w1()
         self.text_output.insert("insert", 'w1 = ' + str(self.w1) + "\n")
-        self.w2 = training_result[1]
+        self.w2 = training_result[0].get_w2()
         self.text_output.insert("insert", 'w2 = ' + str(self.w2) + "\n")
-        self.w3 = training_result[2]
+        self.w3 = training_result[0].get_w3()
         self.text_output.insert("insert", 'w3 = ' + str(self.w3) + "\n")
-        self.w4 = training_result[3]
+        self.w4 = training_result[0].get_w4()
         self.text_output.insert("insert", 'w4 = ' + str(self.w4) + "\n")
-        self.b = training_result[4]
+        self.b = training_result[0].get_b()
         self.text_output.insert("insert", 'b = ' + str(self.b) + "\n")
+        self.neural = training_result[0]
         self.text_output.insert("insert", 'running time: ' + str(total_time) + "\n")
-        methods.draw_scatter_test(training_result[5])
+        methods.draw_scatter_test(training_result[1])
 
     def predict(self, max_temp, min_temp, rainfall, solar):
         result = ((float(max_temp) * self.w1 + float(min_temp) *
                   self.w2 + float(rainfall) * self.w3 + float(solar) * self.w4 + self.b)/1000000)-1
         self.text_output.insert("insert", "The predict result: "+str(result) + "\n")
         return result
+
+    def testing(self, testing_set, neural):
+        result = methods.testing(testing_set, neural)
+        ave_error = sum(result)/len(result)
+        self.text_output.insert("insert", "The testing result show the error: " + str(round(ave_error, 2)) + "\n")
+        return ave_error
 
 
 if __name__ == "__main__":

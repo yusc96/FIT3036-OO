@@ -161,14 +161,22 @@ def training(training_set, training_time):
         sum = sum + j
     avg = sum / len(a_list)
     print('avg_error = ' + str(avg))
-    return [neural_1.get_w1(), neural_1.get_w2(), neural_1.get_w3(), neural_1.get_w4(), neural_1.get_b(), a_list]
+    return [neural_1, a_list]
 
 def draw_scatter_test(y):
-    #part_y = []
-    #for i in range(0, len(y), 1000):
-        #part_y.append(y[i])
     plt.hist(y)
     plt.xlabel("Error")
     plt.ylabel("Frequency")
     plt.title("Prediction Error Histogram")
     plt.show()
+
+def testing(testing_set, neural):
+    a_list = []
+    for i in range(len(testing_set)):
+        neural.set_i1(testing_set[i][0])
+        neural.set_i2(testing_set[i][1])
+        neural.set_i3(testing_set[i][2])
+        neural.set_i4(testing_set[i][3])
+        neural.set_target((testing_set[i][4] + 1) * 1000000)
+        a_list.append(abs((neural.output/1000000) -1 - testing_set[i][4]))
+    return a_list
