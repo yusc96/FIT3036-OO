@@ -5,3 +5,18 @@ class Precipitation:
         self.day = day
         self.amount = amount
         self.location = location
+
+    def get_year(self):
+        return self.year
+
+    def get_month(self):
+        return self.month
+
+    def get_day(self):
+        return self.day
+
+    def get_amount(self):
+        return self.amount
+
+    def get_location(self):
+        return self.location

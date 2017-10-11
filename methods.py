@@ -10,15 +10,15 @@ def get_data(combo_1, combo_2, precipitation, water_level, max_temperature, min_
     min_temperature_list = []
     solar_exposure_list = []
     for i in precipitation_key:
-        precipitation_list.append(precipitation[i].amount)
+        precipitation_list.append(precipitation[i].get_amount())
     for i in water_level_key:
-        water_level_list.append(water_level[i].amount)
+        water_level_list.append(water_level[i].get_amount())
     for i in max_temperature_key:
-        max_temperature_list.append(max_temperature[i].temp)
+        max_temperature_list.append(max_temperature[i].get_temp())
     for i in min_temperature_key:
-        min_temperature_list.append(min_temperature[i].temp)
+        min_temperature_list.append(min_temperature[i].get_temp())
     for i in solar_exposure_key:
-        solar_exposure_list.append(solar_exposure[i].amount)
+        solar_exposure_list.append(solar_exposure[i].get_amount())
     combo_value_1 = combo_1.get()
     combo_value_2 = combo_2.get()
     values_1 = None
@@ -114,24 +114,16 @@ def making_training_testing_set(precipitation, water_level, max_temperature, min
     data_set = []
     for i in range (0, len(precipitation_key)):
         a_record = []
-        a_record.append(float(max_temperature[max_temperature_key[i]].temp))
-        a_record.append(float(min_temperature[min_temperature_key[i]].temp))
-        a_record.append(float(precipitation[precipitation_key[i]].amount))
-        a_record.append(float(solar_exposure[solar_exposure_key[i]].amount))
-        a_record.append(float(water_level[water_level_key[i]].amount))
+        a_record.append(float(max_temperature[max_temperature_key[i]].get_temp()))
+        a_record.append(float(min_temperature[min_temperature_key[i]].get_temp()))
+        a_record.append(float(precipitation[precipitation_key[i]].get_amount()))
+        a_record.append(float(solar_exposure[solar_exposure_key[i]].get_amount()))
+        a_record.append(float(water_level[water_level_key[i]].get_amount()))
         data_set.append(a_record)
     numpy.random.shuffle(data_set)
     training_set = data_set[:int(round(0.7*len(data_set), 0))]
     testing_set = data_set[int(round(0.7*len(data_set), 0)):]
     return [training_set, testing_set]
-
-
-def delete_data_rain_0(training_set):
-    new_set = training_set
-    for i in range(len(new_set)):
-        if new_set[i][2] == 0:
-            del i
-    return new_set
 
 
 def training_sub(a_train_set, my_neural):
@@ -163,12 +155,14 @@ def training(training_set, training_time):
     print('avg_error = ' + str(avg))
     return [neural_1, a_list]
 
+
 def draw_scatter_test(y):
     plt.hist(y)
     plt.xlabel("Error")
     plt.ylabel("Frequency")
     plt.title("Prediction Error Histogram")
     plt.show()
+
 
 def testing(testing_set, neural):
     a_list = []

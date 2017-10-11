@@ -122,7 +122,7 @@ class MainWindow:
             self.min_temperature,
             self.solar_exposure, self.precipitation_key, self.water_level_key, self.max_temperature_key,
             self.min_temperature_key, self.solar_exposure_key, self.etrain.get()))
-        self.train_button.place(x=400, y=240, anchor="center")
+        self.train_button.place(x=400, y=180, anchor="center")
         # create button for Prediction
         self.Predict_button = Button(self.root, text="Predict", command=lambda: self.predict(
             self.emaxtemp.get(), self.emintemp.get(), self.erainfall.get(), self.esolar.get()))
@@ -136,7 +136,7 @@ class MainWindow:
         #add a button for test
         self.test_button = Button(self.root, text="Testing ANN", command=lambda: self.testing(self.testing_set,
                                                                                               self.neural))
-        self.test_button.place(x=400, y=350, anchor="center")
+        self.test_button.place(x=400, y=240, anchor="center")
     def read_csv(self, file_type):
         if file_type == "precipitation":
             print("read precipitation")
