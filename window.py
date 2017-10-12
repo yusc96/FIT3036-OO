@@ -281,9 +281,32 @@ class MainWindow:
         methods.draw_scatter_test(training_result[1])
 
     def predict(self, max_temp, min_temp, rainfall, solar):
-        result = ((float(max_temp) * self.w1 + float(min_temp) *
-                  self.w2 + float(rainfall) * self.w3 + float(solar) * self.w4 + self.b)/1000000)-1
-        self.text_output.insert("insert", "The predict result: "+str(result) + "\n")
+        flag = True
+        result = None
+        try:
+            float(max_temp)
+        except ValueError:
+            flag = False
+            self.text_output.insert("insert","Please Using numerical value as max_temp" + "\n")
+        try:
+            float(min_temp)
+        except ValueError:
+            flag = False
+            self.text_output.insert("insert","Please Using numerical value as min_temp" + "\n")
+        try:
+            float(rainfall)
+        except ValueError:
+            flag = False
+            self.text_output.insert("insert","Please Using numerical value as rainfall" + "\n")
+        try:
+            float(solar)
+        except ValueError:
+            flag = False
+            self.text_output.insert("insert","Please Using numerical value as solar" + "\n")
+        if flag is True:
+            result = ((float(max_temp) * self.w1 + float(min_temp) *
+                        self.w2 + float(rainfall) * self.w3 + float(solar) * self.w4 + self.b)/1000000)-1
+            self.text_output.insert("insert", "The predict result: "+str(result) + "\n")
         return result
 
     def testing(self, testing_set, neural):
